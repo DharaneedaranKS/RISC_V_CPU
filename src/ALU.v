@@ -84,9 +84,9 @@ module alu #(parameter DATA_WIDTH = 64)(
 		else
 			zero = 0;
 			
-		sign = C[31];
+	     sign = C[DATA_WIDTH-1];
 
-      overflow = (in1[31] == in2[31]) && (in1[31] != C[31]); 
+	     overflow = (in1[DATA_WIDTH-1] == in2[DATA_WIDTH-1]) && (in1[DATA_WIDTH-1] != C[DATA_WIDTH-1]); 
 	
  	 end
  		
