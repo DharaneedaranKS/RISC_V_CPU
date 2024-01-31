@@ -10,12 +10,24 @@ module alu #(parameter DATA_WIDTH = 64)(
   output reg sign
 );
 
+
+	parameter add=3'b000,
+  			  sll=3'b001,
+  			  slt=3'b010,
+  			  sltu=3'b011,
+              		  x_or=3'b100,
+   			  srl=3'b101,
+       		 	  o_r=3'b110,
+  			  a_nd=3'b111;
+  			  
+  			  
+  
 	
 	always @ (*)
      begin
 		case (func3)
     		
-          3'b000: if(func7 == 7'b0000000)
+          add: if(func7 == 7'b0000000)
 					begin
                       C= in1 + in2;
 					end// add
@@ -23,31 +35,31 @@ module alu #(parameter DATA_WIDTH = 64)(
 				 	begin
                       C= (in1)-(in2) ;
  					end//sub
- 	   	  3'b001: 
+ 	   	  sll: 
  	   	   begin 
 				 C = in1 << in2[4:0];
 				 cout = 0;			
 		   end //sll
 		   
-		  3'b010: begin//slt
+		  slt: begin//slt
 			         if($unsigned(in1) < $unsigned(in2))
 				         C = 1;
 				     else
 				         C = 0;
 			             cout = 0;
                     end
-          3'b011: begin
+          sltu: begin
             	     if($signed(in1) < $signed(in2))
 				         C = 1;
 			     	 else
 				         C = 0;
 			             cout = 0;	
 			        end//sltu
-		  3'b100: begin // xor
+		  x_or: begin // xor
 		        	C = in1 ^ in2;
 			        cout = 0;			
 			      end
-		  3'b101:
+		  srl:
 			if(func7 == 7'b0000000)
 			 begin // srl
 			  C = in1 >> in2[4:0];
@@ -59,12 +71,12 @@ module alu #(parameter DATA_WIDTH = 64)(
 		    	cout = 0;			
 			 end
 			 
-		  3'b110: begin //or
+		  o_r: begin //or
 		        	C = in1 | in2;
 		        	cout = 0;
 			end
 		 
-		  3'b111: 
+		  a_nd: 
 		 	begin //and
 			 C = in1 & in2;
 			 cout = 0;
@@ -84,7 +96,7 @@ module alu #(parameter DATA_WIDTH = 64)(
 		else
 			zero = 0;
 			
-	     sign = C[DATA_WIDTH-1];
+		 sign = C[DATA_WIDTH-1];
 
 	     overflow = (in1[DATA_WIDTH-1] == in2[DATA_WIDTH-1]) && (in1[DATA_WIDTH-1] != C[DATA_WIDTH-1]); 
 	
