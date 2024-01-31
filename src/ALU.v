@@ -1,9 +1,9 @@
-module alu (
-  input  [31:0] in1,
-  input [31:0] in2,
+module alu #(parameter DATA_WIDTH = 64)(
+  input  [DATA_WIDTH-1:0] in1,
+  input [DATA_WIDTH-1:0] in2,
   input  [3:0] func3,
   input  [3:0] func7,
-  output  reg [31:0] C,
+  output  reg [DATA_WIDTH-1:0] C,
   output reg zero,
   output reg cout,
   output reg overflow,
