@@ -21,21 +21,20 @@
 
 
 module user_editable_registers(
-    input clk,
     input reset,
     input read_en,
     input [4:0] data_read_1,
     input [4:0] data_read_2,
     input [4:0] write_en,
-    input [63:0] data_in,
-    output reg [63:0] data_out_1,
-    output reg [63:0] data_out_2
+    input [31:0] data_in,
+    output reg [31:0] data_out_1,
+    output reg [31:0] data_out_2
     );
     
-    reg [63:0] user_memory [31:0];
+    reg [31:0] user_memory [31:0];
     integer i;
     
-    always @(posedge clk or posedge reset) begin
+    always @(*) begin
         if (reset == 1) begin
             for (i=0; i<32; i = i+1) begin 
                 user_memory [i] = 32'h00000000;
@@ -43,19 +42,25 @@ module user_editable_registers(
         end 
         
         else if (read_en == 1'b1) begin 
-            data_out_1 <= user_memory [data_read_1];
-            data_out_2 <= user_memory [data_read_2];
+            data_out_1 = user_memory [data_read_1];
+            data_out_2 = user_memory [data_read_2];
          end 
+         
+         else if ((read_en == 1'b1)&(write_en > 5'b00000)) begin
+            user_memory [write_en] <= data_in;
+            data_out_1 = user_memory [data_read_1];
+            data_out_2 = 32'hxxxxxxxx;
+         end
          
          else if ((read_en == 1'b0)&(write_en > 5'b00000)) begin
             user_memory [write_en] <= data_in;
-            data_out_1 <= 64'hxxxxxxxxxxxxxxxx;
-            data_out_2 <= 64'hxxxxxxxxxxxxxxxx;
+            data_out_1 = 32'hxxxxxxxx;
+            data_out_2 = 32'hxxxxxxxx;
          end
           
          else begin 
-            data_out_1 <= 64'hxxxxxxxxxxxxxxxx;
-            data_out_2 <= 64'hxxxxxxxxxxxxxxxx;
+            data_out_1 = 32'hxxxxxxxx;
+            data_out_2 = 32'hxxxxxxxx;
          end
          
       end
