@@ -1,6 +1,28 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 02/09/2024 12:53:04 PM
+// Design Name: 
+// Module Name: alu
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 module alu #(parameter DATA_WIDTH = 64)(
-  input  [DATA_WIDTH-1:0] in1,
-  input [DATA_WIDTH-1:0] in2,
+  input  [DATA_WIDTH-1:0] data_rs1,
+  input [DATA_WIDTH-1:0] data_rs2,
   input  [3:0] func3,
   input  [3:0] func7,
   output  reg [DATA_WIDTH-1:0] C,
@@ -20,7 +42,7 @@ module alu #(parameter DATA_WIDTH = 64)(
        		 	  o_r=3'b110,
   			  a_nd=3'b111;
   			  
-  			  
+  	reg signed [31:0] data_rs1_signed;		  
   
 	
 	always @ (*)
@@ -29,56 +51,58 @@ module alu #(parameter DATA_WIDTH = 64)(
     		
           add: if(func7 == 7'b0000000)
 					begin
-                      C= in1 + in2;
+                      C= data_rs1 + data_rs2;
 					end// add
 				  else
 				 	begin
-                      C= (in1)-(in2) ;
+                      C= data_rs1- data_rs2 ;
  					end//sub
  	   	  sll: 
  	   	   begin 
-				 C = in1 << in2[4:0];
+				 C = data_rs1 << data_rs2;
 				 cout = 0;			
 		   end //sll
 		   
 		  slt: begin//slt
-			         if($unsigned(in1) < $unsigned(in2))
+		            assign data_rs1_signed = data_rs1;
+			         if(data_rs1_signed < data_rs2)
 				         C = 1;
 				     else
 				         C = 0;
 			             cout = 0;
                     end
           sltu: begin
-            	     if($signed(in1) < $signed(in2))
+                   
+            	     if(data_rs1 < data_rs1)
 				         C = 1;
 			     	 else
 				         C = 0;
 			             cout = 0;	
 			        end//sltu
 		  x_or: begin // xor
-		        	C = in1 ^ in2;
+		        	C = data_rs1 ^ data_rs2;
 			        cout = 0;			
 			      end
 		  srl:
 			if(func7 == 7'b0000000)
 			 begin // srl
-			  C = in1 >> in2[4:0];
+			  C = data_rs1 >> data_rs2;
 			  cout = 0;			
 			 end
 			else
 			 begin // sra
-              C = $signed(in1) >>> $unsigned(in2[4:0]);
+              C = data_rs1 >>> data_rs2;
 		    	cout = 0;			
 			 end
 			 
 		  o_r: begin //or
-		        	C = in1 | in2;
+		        	C = data_rs1 | data_rs2;
 		        	cout = 0;
 			end
 		 
 		  a_nd: 
 		 	begin //and
-			 C = in1 & in2;
+			 C = data_rs1 & data_rs2;
 			 cout = 0;
 			end
 		
@@ -98,7 +122,7 @@ module alu #(parameter DATA_WIDTH = 64)(
 			
 		 sign = C[DATA_WIDTH-1];
 
-	     overflow = (in1[DATA_WIDTH-1] == in2[DATA_WIDTH-1]) && (in1[DATA_WIDTH-1] != C[DATA_WIDTH-1]); 
+	     overflow = (data_rs1[DATA_WIDTH-1] == data_rs2[DATA_WIDTH-1]) && (data_rs1[DATA_WIDTH-1] != C[DATA_WIDTH-1]); 
 	
  	 end
  		
