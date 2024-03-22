@@ -21,15 +21,17 @@ module riscv_top (
     );
 
     // Instruction fetch module
-    if_module if_module (
+    if_module if_module 
+        (
         .clk(clk),
         .reset(reset),
         .jump(jump),
-        .instruction(instruction),
-         );
+        .instruction(instruction)
+        );
 
     // Instruction decode module
-    id_module id_module (
+    id_module id_module 
+        (
         .clk(clk),
         .reset(reset),
         .instruction(instruction),
@@ -37,11 +39,12 @@ module riscv_top (
         .rs2(rs2),
         .rd(rd),
         .imm(imm),
-        .opcode(opcode),
-            );
+        .opcode(opcode)
+        );
 
     // Register file module
-    reg_file reg_file (
+    reg_file reg_file 
+        (
         .clk(clk),
         .reset(reset),
         .read_en(read_en)
@@ -49,9 +52,9 @@ module riscv_top (
         .data_read_1(data_read_1),
         .data_read_2(data_read_2),
         .data_in(data_in),
-	.data_out_1(data_out_1),
-	.data_out_2(data_out_2)
-    );
+	    .data_out_1(data_out_1),
+	    .data_out_2(data_out_2)
+        );
 
     // ALU module
     alu_module alu_module (
@@ -60,7 +63,7 @@ module riscv_top (
         .rs1(rs1),
         .rs2(rs2),
         .imm(imm),
-        .func3(func3,
+        .func3(func3),
         .func7(func7),
         .C(C),
         .zero(zero),
@@ -70,7 +73,7 @@ module riscv_top (
     );
 
     // Memory access module
-   /* mem_module mem_module (
+    mem_module mem_module (
         .clk(clk),
         .reset(reset),
         .alu_result(alu_result_reg),
@@ -84,30 +87,31 @@ module riscv_top (
         .mem_data_next(mem_data_reg),
         .mem_write(mem_write),
         .mem_write_next(mem_write_reg)
-    );*/
+    );
 
     // Write back module
-   /* wb_module wb_module (
+    wb_module wb_module (
         .clk(clk),
         .reset(reset),
         .mem_data(mem_data_reg),
         .alu_result(alu_result_reg),
         .mem_op(mem_op),
         .write_data(write_data)
-    );*/
+    );
 
     // Branch and jump module
-    bj_module bj_module (
+    bj_module bj_module 
+     (
         .clk(clk),
         .reset(reset),
         .data_rs1(data_rs1),
-	.data_rs2(data_rs2),
+	    .data_rs2(data_rs2),
         .imm(imm),
         .zero(zero),
         .func3(func3),
         .jump(jump),
-        .opcode(opcode),
+        .opcode(opcode)
         
-    );
+     );
 
 endmodule
